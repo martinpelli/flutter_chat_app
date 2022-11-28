@@ -6,7 +6,7 @@ import 'package:flutter_chat_app/screens/register_screen.dart';
 import 'package:flutter_chat_app/screens/users_screen.dart';
 
 final Map<String, Widget Function(BuildContext)> appRoutes = {
-  'usuarios': (_) => UsersScreen(),
+  'users': (_) => UsersScreen(),
   'chat': (_) => ChatScreen(),
   'login': (_) => LoginScreen(),
   'register': (_) => RegisterScreen(),
