@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/models/user_model.dart';
+import 'package:flutter_chat_app/models/user.dart';
+import 'package:flutter_chat_app/services/auth_service.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class UsersScreen extends StatefulWidget {
@@ -11,18 +13,20 @@ class _UsersScreenState extends State<UsersScreen> {
   RefreshController _refreshController = RefreshController(initialRefresh: false);
 
   final users = [
-    UserModel(online: true, email: 'martin@gail.com', name: 'Martin', uid: '1'),
-    UserModel(online: false, email: 'juan@gail.com', name: 'Juan', uid: '2'),
-    UserModel(online: true, email: 'martin@sdgail.com', name: 'Perez', uid: '3')
+    User(online: true, email: 'martin@gail.com', name: 'Martin', uid: '1'),
+    User(online: false, email: 'juan@gail.com', name: 'Juan', uid: '2'),
+    User(online: true, email: 'martin@sdgail.com', name: 'Perez', uid: '3')
   ];
 
   @override
   Widget build(BuildContext context) {
+    final AuthService authService = Provider.of<AuthService>(context);
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
-            'My name',
-            style: TextStyle(color: Colors.black87),
+            authService.user?.name ?? '',
+            style: const TextStyle(color: Colors.black87),
           ),
           elevation: 1,
           backgroundColor: Colors.white,
@@ -31,7 +35,10 @@ class _UsersScreenState extends State<UsersScreen> {
                 Icons.exit_to_app,
                 color: Colors.black87,
               ),
-              onPressed: () {}),
+              onPressed: () {
+                authService.deleteJWTInStorage();
+                Navigator.pushReplacementNamed(context, 'login');
+              }),
           actions: [
             Container(
               margin: const EdgeInsets.only(right: 10),
@@ -67,7 +74,7 @@ class _UsersList extends StatelessWidget {
     required this.users,
   }) : super(key: key);
 
-  final List<UserModel> users;
+  final List<User> users;
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +87,7 @@ class _UsersList extends StatelessWidget {
 }
 
 class _UserTile extends StatelessWidget {
-  final UserModel user;
+  final User user;
 
   const _UserTile({
     Key? key,
