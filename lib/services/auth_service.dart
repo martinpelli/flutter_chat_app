@@ -59,9 +59,11 @@ class AuthService with ChangeNotifier {
   Future<bool> isLoggedIn() async {
     final String? token = await getToken();
 
+    if (token == null) return false;
+
     final registerUrl = Uri.parse('${Environment.apiUrl}/login/renewToken');
 
-    final response = await http.get(registerUrl, headers: {'Content-Type': 'application/json', 'x-token': token!});
+    final response = await http.get(registerUrl, headers: {'Content-Type': 'application/json', 'x-token': token});
 
     if (response.statusCode == 200) {
       final renewTokenresponse = authResponseFromMap(response.body);
